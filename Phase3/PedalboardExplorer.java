@@ -1,6 +1,7 @@
+package Phase3; // ✨ 1. 패키지 선언 추가 (필수)
+
 import java.sql.*;
 import java.util.Scanner;
-
 
 public class PedalboardExplorer {
     private Scanner scanner = new Scanner(System.in);
@@ -212,8 +213,9 @@ public class PedalboardExplorer {
                 while (rs.next()) {
                     String name = rs.getString("Pedalboard_name");
                     String category = rs.getString("Pedalboard_category");
-                    int regDate = rs.getInt("Registeration_date"); // Assuming INT for date
-                    System.out.printf("[%d] %s: %s\n", regDate, name, category);
+                    // ✨ 2. 날짜 가져오는 방식 수정 (getInt -> getDate)
+                    Date regDate = rs.getDate("Registeration_date"); 
+                    System.out.printf("[%s] %s: %s\n", regDate, name, category);
                 }
             }
         } catch (SQLException e) {
