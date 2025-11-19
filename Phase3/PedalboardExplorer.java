@@ -1,4 +1,4 @@
-package Phase3; // ✨ 1. 패키지 선언 추가 (필수)
+package Phase3;
 
 import java.sql.*;
 import java.util.Scanner;
@@ -6,36 +6,34 @@ import java.util.Scanner;
 public class PedalboardExplorer {
     private Scanner scanner = new Scanner(System.in);
 
-    /** 2-1. 보드 상세 내용(이펙터 체인) 조회 (Type 2: User_name 기준) */
     public void getPedalboardDetails(Connection conn) {
         System.out.println("--- 2-1. 보드 상세 내용(이펙터 체인) 조회 ---");
         System.out.print("조회할 사용자 이름을 입력하세요: ");
         String userName = scanner.nextLine().trim();
 
-        String sql = 
-            "SELECT " +
-            "    P.Pedalboard_name, " +
-            "    BI.Chain_order, " +
-            "    EM.Effector_type, " +
-            "    EM.Manufacturer, " +
-            "    EM.Model_name, " +
-            "    PV.Parameter_name, " +
-            "    PV.Actual_Value " +
-            "FROM " +
-            "    USR U, " +
-            "    PEDALBOARD P, " +
-            "    BOARD_ITEM BI, " +
-            "    EFFECTOR_MODEL EM, " +
-            "    PARAMETER_VALUE PV " +
-            "WHERE " +
-            "    U.User_ID = P.User_ID " +
-            "    AND P.Pedalboard_ID = BI.Pedalboard_ID " +
-            "    AND BI.Model_ID = EM.Model_ID " +
-            "    AND BI.Item_ID = PV.Item_ID " +
-            "    AND U.User_name = ? " +
-            "ORDER BY " +
-            "    P.Pedalboard_name ASC, " +
-            "    BI.Chain_order ASC";
+        String sql = "SELECT " +
+                "    P.Pedalboard_name, " +
+                "    BI.Chain_order, " +
+                "    EM.Effector_type, " +
+                "    EM.Manufacturer, " +
+                "    EM.Model_name, " +
+                "    PV.Parameter_name, " +
+                "    PV.Actual_Value " +
+                "FROM " +
+                "    USR U, " +
+                "    PEDALBOARD P, " +
+                "    BOARD_ITEM BI, " +
+                "    EFFECTOR_MODEL EM, " +
+                "    PARAMETER_VALUE PV " +
+                "WHERE " +
+                "    U.User_ID = P.User_ID " +
+                "    AND P.Pedalboard_ID = BI.Pedalboard_ID " +
+                "    AND BI.Model_ID = EM.Model_ID " +
+                "    AND BI.Item_ID = PV.Item_ID " +
+                "    AND U.User_name = ? " +
+                "ORDER BY " +
+                "    P.Pedalboard_name ASC, " +
+                "    BI.Chain_order ASC";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, userName);
@@ -58,23 +56,20 @@ public class PedalboardExplorer {
                     String paramName = rs.getString("Parameter_name");
                     String actualValue = rs.getString("Actual_Value");
 
-                    // 보드 이름 출력 (한 번만)
                     if (!boardName.equals(currentBoardName)) {
                         System.out.println("\n----------------------------------------------------");
                         System.out.println("보드 이름: " + boardName);
                         System.out.println("----------------------------------------------------");
                         currentBoardName = boardName;
-                        currentChainOrder = -1; // 체인 초기화
+                        currentChainOrder = -1;
                     }
-                    
-                    // 새 이펙터 아이템일 경우 이펙터 정보 출력
+
                     if (chainOrder != currentChainOrder) {
-                        System.out.printf("\n[#%d] %s - %s (%s)\n", 
-                            chainOrder, manufacturer, modelName, effectorType);
+                        System.out.printf("\n[#%d] %s - %s (%s)\n",
+                                chainOrder, manufacturer, modelName, effectorType);
                         currentChainOrder = chainOrder;
                     }
-                    
-                    // 파라미터 값 출력
+
                     System.out.printf("  > %-20s: %s\n", paramName, actualValue);
                 }
             }
@@ -83,23 +78,20 @@ public class PedalboardExplorer {
         }
     }
 
-    /** 2-2. 특정 이펙터 포함 보드 검색 (Type 4: Subquery) */
     public void searchBoardsByModelName(Connection conn) {
         System.out.println("--- 2-2. 특정 이펙터 포함 보드 검색 ---");
         System.out.print("검색할 이펙터 모델 이름을 입력하세요: ");
         String modelName = scanner.nextLine().trim();
 
-        // Type 4 쿼리 사용
-        String sql = 
-            "SELECT Pedalboard_name " +
-            "FROM PEDALBOARD " +
-            "WHERE Pedalboard_ID IN ( " +
-            "    SELECT Pedalboard_ID FROM BOARD_ITEM " +
-            "    WHERE Model_ID = ( " +
-            "        SELECT Model_ID FROM EFFECTOR_MODEL " +
-            "        WHERE Model_name = ? " +
-            "    ) " +
-            ")";
+        String sql = "SELECT Pedalboard_name " +
+                "FROM PEDALBOARD " +
+                "WHERE Pedalboard_ID IN ( " +
+                "    SELECT Pedalboard_ID FROM BOARD_ITEM " +
+                "    WHERE Model_ID = ( " +
+                "        SELECT Model_ID FROM EFFECTOR_MODEL " +
+                "        WHERE Model_name = ? " +
+                "    ) " +
+                ")";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, modelName);
@@ -122,24 +114,21 @@ public class PedalboardExplorer {
         }
     }
 
-    /** 2-3. 특정 타입 이펙터 포함 보드 검색 (Type 5: EXISTS Subquery) */
     public void searchBoardsByEffectorType(Connection conn) {
         System.out.println("--- 2-3. 특정 타입 이펙터 포함 보드 검색 ---");
         System.out.print("검색할 이펙터 타입(예: Delay, Fuzz)을 입력하세요: ");
         String effectorType = scanner.nextLine().trim();
 
-        // Type 5 쿼리 사용
-        String sql = 
-            "SELECT P.Pedalboard_name " +
-            "FROM PEDALBOARD P " +
-            "WHERE EXISTS ( " +
-            "    SELECT 1 " +
-            "    FROM BOARD_ITEM BI, EFFECTOR_MODEL EM " +
-            "    WHERE " +
-            "        P.Pedalboard_ID = BI.Pedalboard_ID " +
-            "        AND BI.Model_ID = EM.Model_ID " +
-            "        AND EM.Effector_type = ? " + // 사용자 입력 바인딩
-            ")";
+        String sql = "SELECT P.Pedalboard_name " +
+                "FROM PEDALBOARD P " +
+                "WHERE EXISTS ( " +
+                "    SELECT 1 " +
+                "    FROM BOARD_ITEM BI, EFFECTOR_MODEL EM " +
+                "    WHERE " +
+                "        P.Pedalboard_ID = BI.Pedalboard_ID " +
+                "        AND BI.Model_ID = EM.Model_ID " +
+                "        AND EM.Effector_type = ? " +
+                ")";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, effectorType);
@@ -162,7 +151,6 @@ public class PedalboardExplorer {
         }
     }
 
-    /** 2-4. 카테고리별 보드 검색 (Type 6: LIKE와 동적 Predicate 사용) */
     public void searchBoardsByCategory(Connection conn) {
         System.out.println("--- 2-4. 카테고리별 보드 검색 ---");
         System.out.println("검색할 카테고리(들)을 쉼표(,)로 구분하여 입력하세요 (예: Rock, Blues): ");
@@ -180,25 +168,21 @@ public class PedalboardExplorer {
             if (i > 0) {
                 whereClause.append(" OR ");
             }
-            // Pedalboard_category는 여러 카테고리를 포함하는 문자열이므로 LIKE '%카테고리%' 사용
-            whereClause.append("P.Pedalboard_category LIKE ?"); 
+            whereClause.append("P.Pedalboard_category LIKE ?");
         }
 
-        // Type 6 쿼리 (LIKE 동적 생성으로 수정됨)
-        String sql = 
-            "SELECT " +
-            "    P.Pedalboard_name, " +
-            "    P.Pedalboard_category, " +
-            "    P.Registeration_date " +
-            "FROM " +
-            "    PEDALBOARD P " +
-            whereClause.toString() +
-            " ORDER BY P.Registeration_date DESC";
+        String sql = "SELECT " +
+                "    P.Pedalboard_name, " +
+                "    P.Pedalboard_category, " +
+                "    P.Registeration_date " +
+                "FROM " +
+                "    PEDALBOARD P " +
+                whereClause.toString() +
+                " ORDER BY P.Registeration_date DESC";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             for (int i = 0; i < categories.length; i++) {
-                // LIKE 검색을 위해 와일드카드 추가
-                pstmt.setString(i + 1, "%" + categories[i] + "%"); 
+                pstmt.setString(i + 1, "%" + categories[i] + "%");
             }
 
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -211,8 +195,7 @@ public class PedalboardExplorer {
                 while (rs.next()) {
                     String name = rs.getString("Pedalboard_name");
                     String category = rs.getString("Pedalboard_category");
-                    // ✨ 2. 날짜 가져오는 방식 수정 (getInt -> getDate)
-                    Date regDate = rs.getDate("Registeration_date"); 
+                    Date regDate = rs.getDate("Registeration_date");
                     System.out.printf("[%s] %s: %s\n", regDate, name, category);
                 }
             }
@@ -221,28 +204,25 @@ public class PedalboardExplorer {
         }
     }
 
-    /** 2-5. 평점 4.5 이상 '명예의 전당' 보드 보기 (Type 7: In-line View) */
     public void viewHallOfFameBoards(Connection conn) {
         System.out.println("--- 2-5. 평점 4.5 이상 '명예의 전당' 보드 보기 ---");
 
-        // Type 7 쿼리 사용
-        String sql = 
-            "SELECT " +
-            "    P.Pedalboard_name, " +
-            "    A.AverageRating " +
-            "FROM " +
-            "    PEDALBOARD P, " +
-            "    (SELECT Pedalboard_ID, AVG(Rating_Value) AS AverageRating " +
-            "     FROM RATING " +
-            "     GROUP BY Pedalboard_ID) A " + // 인라인 뷰
-            "WHERE " +
-            "    P.Pedalboard_ID = A.Pedalboard_ID " +
-            "    AND A.AverageRating >= 4.5 " +
-            "ORDER BY " +
-            "    A.AverageRating DESC";
+        String sql = "SELECT " +
+                "    P.Pedalboard_name, " +
+                "    A.AverageRating " +
+                "FROM " +
+                "    PEDALBOARD P, " +
+                "    (SELECT Pedalboard_ID, AVG(Rating_Value) AS AverageRating " +
+                "     FROM RATING " +
+                "     GROUP BY Pedalboard_ID) A " +
+                "WHERE " +
+                "    P.Pedalboard_ID = A.Pedalboard_ID " +
+                "    AND A.AverageRating >= 4.5 " +
+                "ORDER BY " +
+                "    A.AverageRating DESC";
 
         try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+                ResultSet rs = stmt.executeQuery(sql)) {
 
             if (!rs.isBeforeFirst()) {
                 System.out.println("결과 없음: 현재 평균 평점 4.5점 이상인 페달보드가 없습니다.");
@@ -253,7 +233,7 @@ public class PedalboardExplorer {
             System.out.println("----------------------------------------");
             System.out.printf("%-30s | %s\n", "보드 이름", "평균 평점");
             System.out.println("----------------------------------------");
-            
+
             while (rs.next()) {
                 String name = rs.getString("Pedalboard_name");
                 double avgRating = rs.getDouble("AverageRating");
