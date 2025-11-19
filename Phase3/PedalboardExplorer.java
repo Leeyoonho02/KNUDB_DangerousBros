@@ -6,17 +6,11 @@ import java.util.Scanner;
 public class PedalboardExplorer {
     private Scanner scanner = new Scanner(System.in);
 
-    /** 2-1. 보드 상세 내용(이펙터 체인) 조회 (Type 2) */
+    /** 2-1. 보드 상세 내용(이펙터 체인) 조회 (Type 2: User_name 기준) */
     public void getPedalboardDetails(Connection conn) {
         System.out.println("--- 2-1. 보드 상세 내용(이펙터 체인) 조회 ---");
-        System.out.print("조회할 페달보드 ID를 입력하세요: ");
-        if (!scanner.hasNextInt()) {
-            System.out.println("⚠️ 유효하지 않은 입력입니다. 숫자를 입력해주세요.");
-            scanner.next(); // 잘못된 토큰 처리
-            return;
-        }
-        int pedalboardId = scanner.nextInt();
-        scanner.nextLine(); // 버퍼 비우기
+        System.out.print("조회할 사용자 이름을 입력하세요: ");
+        String userName = scanner.nextLine().trim();
 
         String sql = 
             "SELECT " +
@@ -28,24 +22,27 @@ public class PedalboardExplorer {
             "    PV.Parameter_name, " +
             "    PV.Actual_Value " +
             "FROM " +
+            "    USR U, " +
             "    PEDALBOARD P, " +
             "    BOARD_ITEM BI, " +
             "    EFFECTOR_MODEL EM, " +
             "    PARAMETER_VALUE PV " +
             "WHERE " +
-            "    P.Pedalboard_ID = BI.Pedalboard_ID " +
+            "    U.User_ID = P.User_ID " +
+            "    AND P.Pedalboard_ID = BI.Pedalboard_ID " +
             "    AND BI.Model_ID = EM.Model_ID " +
             "    AND BI.Item_ID = PV.Item_ID " +
-            "    AND P.Pedalboard_ID = ? " +
+            "    AND U.User_name = ? " +
             "ORDER BY " +
+            "    P.Pedalboard_name ASC, " +
             "    BI.Chain_order ASC";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, pedalboardId);
+            pstmt.setString(1, userName);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (!rs.isBeforeFirst()) {
-                    System.out.println("결과 없음: ID " + pedalboardId + "에 해당하는 페달보드가 없거나 아이템 설정이 없습니다.");
+                    System.out.println("결과 없음: 사용자 '" + userName + "'의 페달보드가 없습니다.");
                     return;
                 }
 
@@ -64,9 +61,10 @@ public class PedalboardExplorer {
                     // 보드 이름 출력 (한 번만)
                     if (!boardName.equals(currentBoardName)) {
                         System.out.println("\n----------------------------------------------------");
-                        System.out.println("보드 이름: " + boardName + " (ID: " + pedalboardId + ")");
+                        System.out.println("보드 이름: " + boardName);
                         System.out.println("----------------------------------------------------");
                         currentBoardName = boardName;
+                        currentChainOrder = -1; // 체인 초기화
                     }
                     
                     // 새 이펙터 아이템일 경우 이펙터 정보 출력
