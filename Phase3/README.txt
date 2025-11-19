@@ -1,5 +1,5 @@
 ================================================================================
-KNU Database Project Phase 3 - Dangerous Bros (Pedalboard System)
+KNU Database Project Phase 3 - Pedalboard System (Dangerous Bros)
 ================================================================================
 
 1. 프로젝트 개요
