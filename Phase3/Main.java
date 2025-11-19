@@ -11,7 +11,9 @@ public class Main {
     private static UserDAO userDAO = new UserDAO();
     private static PedalboardDAO pedalboardDAO = new PedalboardDAO(); 
     // ✨ PedalboardExplorer 인스턴스 추가
-    private static PedalboardExplorer explorer = new PedalboardExplorer(); 
+    private static PedalboardExplorer explorer = new PedalboardExplorer();
+    // ✨ StatisticsAndRanking 인스턴스 추가
+    private static StatisticsAndRanking statistics = new StatisticsAndRanking();
     private static User loggedInUser = null;
 	
 	public static void main(String[] args) {
@@ -65,7 +67,7 @@ public class Main {
              switch (choice) {
                  case 1: showMyPageMenu(); break;
                  case 2: showPedalboardExplorerMenu(); break; // showPedalboardExplorerMenu 호출
-                 case 3: System.out.println("통계 및 랭킹 기능은 구현 예정입니다."); break;
+                 case 3: showStatisticsAndRankingMenu(); break; // ✨ 통계 및 랭킹 메뉴 호출
                  case 4: logout(); break;
                  default: System.out.println("잘못된 입력입니다. 다시 선택해주세요.");
              }
@@ -233,7 +235,7 @@ public class Main {
         System.out.println("\n--- [내 페달보드 목록 (등록순)] ---");
         // PedalboardDAO의 메서드에 DB 연결 및 예외 처리가 이미 되어 있다고 가정
         List<Pedalboard> boards = pedalboardDAO.getPedalboardsByUserId(loggedInUser.getUserId());
-        
+
         if (boards.isEmpty()) {
             System.out.println("등록된 페달보드가 없습니다.");
         } else {
@@ -242,5 +244,49 @@ public class Main {
             }
         }
         System.out.println("---------------------------------");
+    }
+
+    // 5. 통계 및 랭킹 메뉴 (3-1 ~ 3-5 기능 포함)
+    private static void showStatisticsAndRankingMenu() {
+        Connection conn = null;
+        try {
+            conn = DBManager.getConnection();
+            if (conn == null) {
+                System.out.println("❌ DB 연결 실패로 기능을 실행할 수 없습니다.");
+                return;
+            }
+
+            while (true) {
+                System.out.println("\n--- [3. 통계 및 랭킹] ---");
+                System.out.println("3-1. 유저별 보드 등록 수 보기 (Type 3)");
+                System.out.println("3-2. 개별 페달보드 평균 평점 조회 (Type 3)");
+                System.out.println("3-3. 제조사별 모델 수 TOP 10 (Type 9)");
+                System.out.println("3-4. 유저별 평균 평점 랭킹 (Type 9)");
+                System.out.println("3-5. 활동 분석 (보드 생성 O, 평가 X 유저) (Type 10)");
+                System.out.println("0. 메인으로 돌아가기");
+                System.out.println("---------------------------");
+                System.out.print("메뉴 선택 > ");
+
+                String choice = scanner.nextLine().trim();
+
+                if (choice.equals("0")) {
+                    System.out.println("메인 메뉴로 돌아갑니다.");
+                    break;
+                }
+
+                switch (choice) {
+                    case "3-1": statistics.getUserBoardCount(conn); break;
+                    case "3-2": statistics.getPedalboardAverageRating(conn); break;
+                    case "3-3": statistics.getManufacturerModelCountTop10(conn); break;
+                    case "3-4": statistics.getUserAverageRatingRanking(conn); break;
+                    case "3-5": statistics.getInactiveRaters(conn); break;
+                    default: System.out.println("⚠️ 잘못된 메뉴 선택입니다. 다시 입력해주세요.");
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("❌ 기능 실행 중 오류 발생: " + e.getMessage());
+        } finally {
+            DBManager.closeConnection(conn);
+        }
     }
 }
