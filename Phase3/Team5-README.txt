@@ -95,6 +95,5 @@ Java와 Oracle Database를 연동하여 CLI(Command Line Interface) 환경에서
 2) 실행
    $ java Phase3.Main
 
-* 주의: 실행 시 CLASSPATH에 Oracle JDBC 드라이버(ojdbc10.jar)가 포함되어 있어야 합니다.
   예) java -cp ".:./ojdbc10.jar" Phase3.Main  (Mac/Linux)
       java -cp ".;./ojdbc10.jar" Phase3.Main  (Windows)
