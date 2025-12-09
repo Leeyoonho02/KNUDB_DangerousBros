@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>새 페달보드 추가 - Dangerous Bros</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h2>새 페달보드 추가</h2>
+            <form action="/mypage/add-board" method="POST">
+                <div class="form-group">
+                    <label for="name">페달보드 이름</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="category">카테고리</label>
+                    <input type="text" id="category" name="category" placeholder="예: Rock, Blues">
+                </div>
+                <div class="actions">
+                    <button type="submit" class="btn">추가하기</button>
+                    <a href="<%= session.previousPage || '/mypage/boards' %>" class="btn btn-secondary">취소</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

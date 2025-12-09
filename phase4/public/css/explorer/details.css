@@ -1,0 +1,353 @@
+/* ============================================== */
+/* 1. Global Variables (Softer Dark Theme)        */
+/* ============================================== */
+:root {
+    --primary-color: #7A9BBE; 
+    --primary-light: #B0C4DE; 
+    --primary-hover: #6080A0;
+    --secondary-color: #A0A0A0; 
+    
+    --background-color: #2A2A2A; 
+    --glass-bg: rgba(255, 255, 255, 0.1); 
+    --glass-border: rgba(255, 255, 255, 0.2); 
+    
+    --text-color: #EAEAEA; 
+    --text-muted: #B0B0B0; 
+    --warning-color: #CC6666; 
+    
+    /* 상세 페이지 전용 강조색 */
+    --rating-color: #FFD700; /* 금색 */
+    --chain-order-bg: #405A75; /* 순서 배지 배경색 */
+}
+
+/* ------------------------------------------------ */
+/* 2. Global & Body Styles                          */
+/* ------------------------------------------------ */
+body {
+    font-family: 'Inter', 'Montserrat', sans-serif; 
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--background-color) 0%, #1A1A1A 100%);
+}
+
+.container {
+    width: 100%;
+    max-width: 700px;
+    padding: 2rem;
+    text-align: center;
+}
+
+/* ------------------------------------------------ */
+/* 3. Card Styles (Glassy Effect) & Base Content    */
+/* ------------------------------------------------ */
+.card {
+    background-color: var(--glass-bg);
+    padding: 3rem; 
+    border-radius: 1.5rem;
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* 제목 <h2>는 상세 페이지에서 보드 이름으로 사용 */
+.card h2 {
+    color: var(--primary-light);
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    margin-top: 0;
+    line-height: 1.2;
+}
+
+.card p {
+    color: var(--text-color);
+    margin: 0.25rem 0;
+}
+
+/* Card 내부에 다시 한번 감싸는 영역 (평가, 추가 폼) */
+.card-inset {
+    text-align: left;
+    margin: 2rem 0;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    
+    /* Inset Glassy 스타일 */
+    background-color: rgba(0, 0, 0, 0.15); 
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5); 
+}
+
+.card-inset h4 {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+/* ------------------------------------------------ */
+/* 4. Board Header & Rating Styles                  */
+/* ------------------------------------------------ */
+.board-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.board-header p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+}
+
+.board-header p strong {
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+/* 평점 강조 */
+.board-header p strong:first-child { 
+    color: var(--rating-color);
+    font-size: 1.1rem;
+}
+
+/* ------------------------------------------------ */
+/* 5. Form Styles (Rating / Add Item)               */
+/* ------------------------------------------------ */
+
+.form-group {
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    color: var(--primary-light);
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
+}
+
+.form-group input[type="number"], 
+.form-group input[type="text"],
+.form-group select {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--glass-border);
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--text-color);
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    font-size: 1rem;
+    -webkit-appearance: none; /* Select 화살표 커스텀을 위한 초기화 */
+    appearance: none;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 8px rgba(122, 155, 190, 0.5);
+}
+
+/* Select Placeholder/Disabled Option 스타일링 */
+.form-group select option[disabled]:first-child {
+    color: var(--text-muted);
+}
+
+/* ------------------------------------------------ */
+/* 6. Effector Chain Styles (가장 중요한 부분)        */
+/* ------------------------------------------------ */
+
+.effector-chain {
+    text-align: left;
+    margin-bottom: 2rem;
+}
+
+.effector-chain h3 {
+    color: var(--primary-light);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.chain-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.chain-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    
+    /* Glassy 항목 스타일 */
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--glass-border);
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
+}
+
+.chain-item:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+/* 순서 번호 (Badge) */
+.item-order {
+    flex-shrink: 0;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.1rem;
+    font-weight: 800;
+    border-radius: 50%; /* 원형 */
+    background-color: var(--chain-order-bg);
+    color: var(--text-color);
+    margin-right: 1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.item-details {
+    flex-grow: 1;
+}
+
+.item-details h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.item-details h4 a {
+    color: var(--primary-light);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.item-details h4 a:hover {
+    color: var(--primary-hover);
+}
+
+.item-type {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+/* 파라미터 리스트 */
+.item-params {
+    margin-top: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.param, .param-empty {
+    font-size: 0.8rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.4rem;
+}
+
+.param {
+    background-color: rgba(122, 155, 190, 0.2); /* primary color의 투명 배경 */
+    color: var(--primary-light);
+    font-weight: 500;
+    border: 1px solid rgba(122, 155, 190, 0.3);
+}
+
+.param-empty {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.item-actions {
+    flex-shrink: 0;
+    margin-left: 1rem;
+}
+
+/* ------------------------------------------------ */
+/* 7. Button Styles (Actions)                       */
+/* ------------------------------------------------ */
+.actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+/* .card-inset 내의 actions (평가하기 버튼) */
+.card-inset .actions {
+    margin-top: 1.5rem;
+    justify-content: flex-end;
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.8rem 1.8rem;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap; 
+}
+
+/* Default Button (평가하기/추가) */
+.btn:not(.btn-secondary):not(.btn-danger) {
+    background: linear-gradient(145deg, #6080A0 0%, #486682 100%);
+    color: white;
+    box-shadow: 0 5px 12px rgba(96, 128, 160, 0.6);
+}
+
+.btn:not(.btn-secondary):not(.btn-danger):hover {
+    background: linear-gradient(145deg, #486682 0%, #6080A0 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 7px 15px rgba(96, 128, 160, 0.8);
+}
+
+/* Secondary Button (뒤로가기) */
+.btn-secondary {
+    background: linear-gradient(145deg, #707070 0%, #5A5A5A 100%);
+    color: white;
+    box-shadow: 0 5px 12px rgba(112, 112, 112, 0.5);
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(145deg, #5A5A5A 0%, #707070 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 7px 15px rgba(112, 112, 112, 0.7);
+}
+
+/* Danger Button (삭제) */
+.btn-danger {
+    background: linear-gradient(145deg, #A05050 0%, #803C3C 100%);
+    color: white;
+    box-shadow: 0 5px 12px rgba(160, 80, 80, 0.6);
+}
+
+.btn-danger:hover {
+    background: linear-gradient(145deg, #803C3C 0%, #A05050 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 7px 15px rgba(160, 80, 80, 0.8);
+}
+
+/* 작은 버튼 스타일 (이펙터 삭제) */
+.btn-sm {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+}

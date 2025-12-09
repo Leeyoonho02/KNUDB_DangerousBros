@@ -1,0 +1,224 @@
+@font-face {
+    font-family: 'Bitcount Prop Single - thin';
+    src: url('../fonts/BitcountPropSingle_Cursive-Medium.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+:root {
+    /* --- Low Saturation & Modern Tones (Dark Base -> Softer Dark) --- */
+    --primary-color: #7A9BBE; 
+    --primary-light: #B0C4DE; 
+    --primary-hover: #6080A0;
+    --secondary-color: #A0A0A0;
+    
+    /* 배경: 기존 #1A1A1A -> #2A2A2A (약간 밝아짐) */
+    --background-color: #2A2A2A; 
+    
+    --glass-bg: rgba(255, 255, 255, 0.1); /* 투명도를 0.08에서 0.1로 약간 높여 대비 증가 */
+    --glass-border: rgba(255, 255, 255, 0.2); 
+    
+    --text-color: #EAEAEA; /* 텍스트도 약간 더 밝게 */
+    --text-muted: #B0B0B0; /* 차분한 텍스트도 약간 더 밝게 */
+    --warning-color: #CC6666; 
+}
+
+/* ------------------------------------------------ */
+/* 1. Global & Body Styles (Dark/Gradient Background) */
+/* ------------------------------------------------ */
+body {
+    /* 폰트: 'Inter' 대신 요청하셨던 'Montserrat'로 변경 */
+    font-family: 'Montserrat', sans-serif; 
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    /* 배경색 수정: 변수와 부드러운 톤을 사용하여 더 밝은 그라디언트 적용 */
+    background: linear-gradient(135deg, var(--background-color) 0%, #1A1A1A 100%);
+}
+.container {
+    width: 100%;
+    max-width: 700px;
+    padding: 2rem;
+    text-align: center;
+}
+
+/* ------------------------------------------------ */
+/* 2. Header & Footer Styles */
+/* ------------------------------------------------ */
+header h1 {
+    /* 텍스트 스타일 대신 이미지 컨테이너로만 사용 */
+    margin: 0;
+    margin-bottom: 0.5rem; /* 로고 아래 여백 */
+}
+
+header h1 img.logo-image {
+    /* 로고 이미지의 크기 지정 */
+    max-width: 400px;
+    height: auto;
+    width: 100%; /* 컨테이너 너비에 맞춰 크기 조절 */
+    
+    /* 로고에 Glassy 테마에 어울리는 깊이감 있는 그림자 효과 추가 */
+    /* PNG 로고에 드롭 쉐도우를 적용하여 입체감을 부여합니다. */
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.7)) 
+            drop-shadow(0 0 5px var(--primary-hover)); /* 은은한 푸른빛 하이라이트 */
+    
+    /* 이미지 자체에 transition을 주면 호버 시 움직임 효과를 줄 수 있습니다. */
+    transition: transform 0.3s ease;
+}
+
+header h1 img.logo-image:hover {
+    transform: scale(1.03); /* 마우스 오버 시 약간 확대되어 떠오르는 느낌 */
+}
+
+header p {
+    color: var(--text-muted);
+    margin-bottom: 3rem;
+    font-size: 0.9rem;
+}
+
+footer {
+    margin-top: 3rem;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+/* ------------------------------------------------ */
+/* 3. Card Styles (Glassy Effect) */
+/* ------------------------------------------------ */
+.card {
+    background-color: var(--glass-bg);
+    padding: 2.5rem; 
+    border-radius: 1.5rem;
+    border: 1px solid var(--glass-border);
+    
+    /* Glassy Effect 핵심 */
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.card h2 {
+    color: var(--primary-light);
+    font-size: 1.8rem;
+}
+
+/* ------------------------------------------------ */
+/* 4. Button Styles (Gradient Effect) */
+/* ------------------------------------------------ */
+.actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.8rem 1.8rem;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary {
+    /* 기존: #7A9BBE -> #6080A0로 시작 (더 어두운 톤) */
+    background: linear-gradient(145deg, #6080A0 0%, #486682 100%);
+    color: white;
+    /* 그림자 강화 */
+    box-shadow: 0 5px 12px rgba(96, 128, 160, 0.6);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(145deg, #486682 0%, #6080A0 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 7px 15px rgba(96, 128, 160, 0.8);
+}
+
+/* Secondary Button: 중성적인 회색 그라디언트 (더 어둡게) */
+.btn-secondary {
+    /* 기존: #A0A0A0 -> #707070로 시작 (더 어두운 톤) */
+    background: linear-gradient(145deg, #707070 0%, #5A5A5A 100%);
+    color: white;
+    /* 그림자 강화 */
+    box-shadow: 0 5px 12px rgba(112, 112, 112, 0.5);
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(145deg, #5A5A5A 0%, #707070 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 7px 15px rgba(112, 112, 112, 0.7);
+}
+
+/* 로그아웃 버튼 (경고색) - 대비 강화 */
+.btn[style*="background-color: #ef4444"] { 
+    background: linear-gradient(145deg, #A05050 0%, #803C3C 100%) !important; /* 더 어둡게 조정 */
+    color: white !important;
+    box-shadow: 0 5px 12px rgba(160, 80, 80, 0.6);
+}
+
+.btn[style*="background-color: #ef4444"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 15px rgba(160, 80, 80, 0.8);
+}
+
+/* ------------------------------------------------ */
+/* 5. 기타 UI 요소 (Glassy/Dark Theme 유지) */
+/* ------------------------------------------------ */
+.form-group {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    box-sizing: border-box;
+    color: var(--text-color);
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(122, 155, 190, 0.2);
+}
+
+.links a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.menu-item {
+    background-color: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+}
+
+.data-table th {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.data-table tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.data-table tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이페이지 - Dangerous Bros</title>
+    <link rel="stylesheet" href="/css/mypage/index.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <h2><img src="/images/pick.png" alt="마이페이지 아이콘" class="page-icon">
+                <span class="page-title-text">마이페이지</span></h2>
+            <p>안녕하세요, <strong>
+                    <%= user.name %>
+                </strong>님.</p>
+
+            <div class="menu-list">
+                <a href="/mypage/boards" class="menu-item">
+                    <h3>내 페달보드 목록</h3>
+                    <p>등록한 페달보드를 확인합니다.</p>
+                </a>
+                <a href="/mypage/add-board" class="menu-item">
+                    <h3>새 페달보드 추가</h3>
+                    <p>새로운 페달보드를 등록합니다.</p>
+                </a>
+                <a href="/mypage/models" class="menu-item">
+                    <h3>내 이펙터 모델</h3>
+                    <p>생성한 이펙터 모델을 확인합니다.</p>
+                </a>
+                <a href="/mypage/add-model" class="menu-item">
+                    <h3>새 이펙터 모델 추가</h3>
+                    <p>새로운 이펙터 모델을 생성합니다.</p>
+                </a>
+                <a href="/mypage/update" class="menu-item">
+                    <h3>회원 정보 수정</h3>
+                    <p>비밀번호, 이름, 이메일을 수정합니다.</p>
+                </a>
+                <a href="/mypage/delete" class="menu-item delete">
+                    <h3>회원 탈퇴</h3>
+                    <p>계정을 삭제합니다.</p>
+                </a>
+            </div>
+
+            <div class="actions">
+                <a href="/" class="btn btn-secondary">메인으로</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

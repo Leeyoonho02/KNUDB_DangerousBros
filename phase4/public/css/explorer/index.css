@@ -1,0 +1,255 @@
+/* ============================================== */
+/* 1. Global Variables (Softer Dark Theme)        */
+/* ============================================== */
+:root {
+    --primary-color: #7A9BBE; 
+    --primary-light: #B0C4DE; 
+    --primary-hover: #6080A0;
+    --secondary-color: #A0A0A0; 
+    
+    --background-color: #2A2A2A; 
+    --glass-bg: rgba(255, 255, 255, 0.1); 
+    --glass-border: rgba(255, 255, 255, 0.2); 
+    
+    --text-color: #EAEAEA; 
+    --text-muted: #B0B0B0; 
+    --warning-color: #CC6666; 
+    
+    /* 검색 페이지 전용 색상 */
+    --search-accent: #6699CC; /* 검색창 배경 강조색 */
+    --search-border: #4477A0;
+}
+
+/* ------------------------------------------------ */
+/* 2. Global & Body Styles                          */
+/* ------------------------------------------------ */
+body {
+    font-family: 'Inter', 'Montserrat', sans-serif; 
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--background-color) 0%, #1A1A1A 100%);
+}
+
+.container {
+    width: 100%;
+    max-width: 700px;
+    padding: 2rem;
+    text-align: center;
+}
+
+/* ------------------------------------------------ */
+/* 3. Card Styles (Glassy Effect) & Page Title      */
+/* ------------------------------------------------ */
+.card {
+    background-color: var(--glass-bg);
+    padding: 3rem; 
+    border-radius: 1.5rem;
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.card h2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    font-size: 0; 
+    margin-bottom: 1rem;
+    margin-top: 0; 
+}
+
+/* 페이지 아이콘 이미지 스타일 */
+.card h2 img.page-icon {
+    width: 70px; /* 아이콘 크기를 50px로 조정 */
+    height: auto;
+    margin-bottom: 0.5rem;
+    
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
+    transition: transform 0.3s ease;
+}
+
+/* 페이지 제목 (<h2>페달보드 탐색</h2>) */
+.card h2 {
+    color: var(--primary-light);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    margin-top: 0;
+    line-height: 1.1;
+}
+
+.card p {
+    color: var(--text-color);
+}
+
+/* ------------------------------------------------ */
+/* 4. Button Styles (Global & Specific)             */
+/* ------------------------------------------------ */
+.actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.8rem 1.8rem;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap; /* 버튼 내용 줄바꿈 방지 */
+}
+
+/* Primary Button (검색 버튼) */
+.btn-primary {
+    background: linear-gradient(145deg, #6080A0 0%, #486682 100%);
+    color: white;
+    box-shadow: 0 5px 12px rgba(96, 128, 160, 0.6);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(145deg, #486682 0%, #6080A0 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 7px 15px rgba(96, 128, 160, 0.8);
+}
+
+/* Secondary Button (메인으로) */
+.btn-secondary {
+    background: linear-gradient(145deg, #707070 0%, #5A5A5A 100%);
+    color: white;
+    box-shadow: 0 5px 12px rgba(112, 112, 112, 0.5);
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(145deg, #5A5A5A 0%, #707070 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 7px 15px rgba(112, 112, 112, 0.7);
+}
+
+/* 작은 버튼 스타일 (미사용) */
+.btn-sm {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+}
+
+/* ------------------------------------------------ */
+/* 5. Search Section Styles (검색 옵션 영역)          */
+/* ------------------------------------------------ */
+.search-section {
+    text-align: left;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    
+    /* 검색 영역을 돋보이게 하는 Inset Card Style 적용 */
+    background-color: rgba(0, 0, 0, 0.15); 
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5); 
+}
+
+.search-section h3 {
+    color: var(--search-accent);
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.search-form {
+    margin-bottom: 1.5rem;
+}
+
+.search-form label {
+    display: block;
+    color: var(--text-color);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.input-group {
+    display: flex;
+    gap: 0.5rem;
+    align-items: stretch;
+}
+
+.input-group input[type="text"] {
+    flex-grow: 1;
+    padding: 0.8rem 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--search-border);
+    background-color: var(--glass-bg); /* 일반 입력창보다 살짝 불투명하게 */
+    color: var(--text-color);
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    font-size: 1rem;
+}
+
+.input-group input[type="text"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 8px rgba(122, 155, 190, 0.5);
+}
+
+/* ------------------------------------------------ */
+/* 6. Hall of Fame Menu Styles (단일 메뉴 항목)       */
+/* ------------------------------------------------ */
+
+.menu-list {
+    display: grid;
+    grid-template-columns: 1fr; 
+    gap: 1.2rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.menu-item {
+    display: block; 
+    text-align: center;
+    padding: 1.5rem;
+    
+    /* Glassy 효과 */
+    background-color: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 1rem;
+    
+    text-decoration: none;
+    color: var(--text-color);
+    transition: all 0.3s ease;
+    
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.menu-item:hover {
+    background-color: rgba(255, 255, 255, 0.15); 
+    border-color: var(--primary-color);
+    transform: translateY(-3px); 
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5);
+}
+
+.menu-item h3 {
+    color: var(--primary-light); /* 명예의 전당 제목을 강조 */
+    font-size: 1.4rem;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+.menu-item p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin: 0;
+}

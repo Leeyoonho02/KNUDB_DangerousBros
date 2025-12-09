@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>페달보드 탐색 - Dangerous Bros</title>
+    <link rel="stylesheet" href="/css/explorer/index.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <h2><img src="/images/pick.png" alt="마이페이지 아이콘" class="page-icon">
+                <span class="page-title-text">페달보드 검색</span></h2>
+
+            <div class="search-section">
+                <h3>검색 옵션</h3>
+
+                <!-- Type 4: Search by Model Name -->
+                <form action="/explorer/search/model" method="GET" class="search-form">
+                    <label>특정 이펙터 포함 검색 (Type 4)</label>
+                    <div class="input-group">
+                        <input type="text" name="modelName" placeholder="모델명 (예: TS9)" required>
+                        <button type="submit" class="btn btn-primary">검색</button>
+                    </div>
+                </form>
+
+                <!-- Type 5: Search by Effector Type -->
+                <form action="/explorer/search/type" method="GET" class="search-form">
+                    <label>이펙터 타입 포함 검색 (Type 5)</label>
+                    <div class="input-group">
+                        <input type="text" name="typeName" placeholder="타입 (예: Delay)" required>
+                        <button type="submit" class="btn btn-primary">검색</button>
+                    </div>
+                </form>
+
+                <!-- Type 6: Search by Category -->
+                <form action="/explorer/search/category" method="GET" class="search-form">
+                    <label>카테고리별 검색 (Type 6)</label>
+                    <div class="input-group">
+                        <input type="text" name="category" placeholder="카테고리 (예: Rock)" required>
+                        <button type="submit" class="btn btn-primary">검색</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="menu-list">
+                <a href="/explorer/hall-of-fame" class="menu-item">
+                    <h3>🏆 명예의 전당 (Type 7)</h3>
+                    <p>평점 4.5 이상인 최고의 페달보드들을 만나보세요.</p>
+                </a>
+            </div>
+
+            <div class="actions">
+                <a href="/" class="btn btn-secondary">메인으로</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

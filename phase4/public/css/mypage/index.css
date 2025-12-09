@@ -1,0 +1,469 @@
+/* ============================================== */
+/* 1. Global Variables (Softer Dark Theme)        */
+/* ============================================== */
+:root {
+    --primary-color: #7A9BBE; 
+    --primary-light: #B0C4DE; 
+    --primary-hover: #6080A0;
+    --secondary-color: #A0A0A0; 
+    
+    --background-color: #2A2A2A; 
+    --glass-bg: rgba(255, 255, 255, 0.1); 
+    --glass-border: rgba(255, 255, 255, 0.2); 
+    
+    --text-color: #EAEAEA; 
+    --text-muted: #B0B0B0; 
+    --warning-color: #CC6666; 
+}
+
+/* ------------------------------------------------ */
+/* 2. Global & Body Styles (index.ejs 폰트 Inter 적용) */
+/* ------------------------------------------------ */
+body {
+    /* EJS에 링크된 Inter 폰트를 사용 */
+    font-family: 'Inter', 'Montserrat', sans-serif; 
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    /* 배경 그라디언트 (Softer Dark) */
+    background: linear-gradient(135deg, var(--background-color) 0%, #1A1A1A 100%);
+}
+
+.container {
+    width: 100%;
+    max-width: 700px;
+    padding: 2rem;
+    text-align: center;
+}
+
+/* --- index.ejs 헤더 및 푸터 스타일 --- */
+header h1 {
+    font-size: 2.2rem;
+    color: var(--primary-light);
+    margin-bottom: 0.5rem;
+}
+
+header p {
+    color: var(--text-muted);
+    margin-bottom: 3rem;
+    font-size: 0.9rem;
+}
+
+footer p {
+    margin-top: 3rem;
+    font-size: 0.75rem;
+    color: var(--secondary-color);
+}
+
+/* ------------------------------------------------ */
+/* 3. Card Styles (Glassy Effect) & Mypage Header */
+/* ------------------------------------------------ */
+.card {
+    background-color: var(--glass-bg);
+    padding: 3rem; 
+    border-radius: 1.5rem;
+    border: 1px solid var(--glass-border);
+    
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* <h2> 태그 (마이페이지/보드 목록 페이지의 아이콘+제목 컨테이너) */
+.card h2 {
+    display: flex;
+    flex-direction: column; /* 기본: 아이콘 위, 텍스트 아래 */
+    align-items: center;
+    
+    font-size: 0; /* 텍스트는 span으로 제어 */
+    margin-bottom: 1rem;
+    margin-top: 0; 
+}
+
+/* 페이지 아이콘 이미지 스타일 (Mypage, Board List) */
+.card h2 img.page-icon {
+    width: 50px; 
+    height: auto;
+    margin-bottom: 0.5rem;
+    
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
+    transition: transform 0.3s ease;
+}
+
+/* 마이페이지/보드 목록 제목 텍스트 스타일 */
+.card h2 span.page-title-text {
+    color: var(--primary-light);
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1.1; 
+}
+
+.card p {
+    color: var(--text-color);
+}
+
+/* ------------------------------------------------ */
+/* 4. Button Styles (Global Actions) */
+/* ------------------------------------------------ */
+.actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.8rem 1.8rem;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+/* Primary Button */
+.btn-primary {
+    background: linear-gradient(145deg, #6080A0 0%, #486682 100%);
+    color: white;
+    box-shadow: 0 5px 12px rgba(96, 128, 160, 0.6);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(145deg, #486682 0%, #6080A0 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 7px 15px rgba(96, 128, 160, 0.8);
+}
+
+/* Secondary Button */
+.btn-secondary {
+    background: linear-gradient(145deg, #707070 0%, #5A5A5A 100%);
+    color: white;
+    box-shadow: 0 5px 12px rgba(112, 112, 112, 0.5);
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(145deg, #5A5A5A 0%, #707070 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 7px 15px rgba(112, 112, 112, 0.7);
+}
+
+/* 로그아웃 버튼 */
+.btn[style*="background-color: #ef4444"], .btn-danger { 
+    background: linear-gradient(145deg, #A05050 0%, #803C3C 100%);
+    color: white;
+    box-shadow: 0 5px 12px rgba(160, 80, 80, 0.6);
+}
+
+.btn[style*="background-color: #ef4444"]:hover, .btn-danger:hover {
+    background: linear-gradient(145deg, #803C3C 0%, #A05050 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 7px 15px rgba(160, 80, 80, 0.8);
+}
+
+/* 작은 버튼 스타일 (삭제 버튼) */
+.btn-sm {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+}
+
+/* ------------------------------------------------ */
+/* 5. Mypage Menu Styles (2x3 Grid View) */
+/* ------------------------------------------------ */
+
+.menu-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 1.2rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+    .menu-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+.menu-item {
+    display: block; 
+    text-align: left;
+    padding: 1.5rem;
+    
+    background-color: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 1rem;
+    
+    text-decoration: none;
+    color: var(--text-color);
+    transition: all 0.3s ease;
+    
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.menu-item:hover {
+    background-color: rgba(255, 255, 255, 0.15); 
+    border-color: var(--primary-color);
+    transform: translateY(-3px); 
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5);
+}
+
+.menu-item h3 {
+    color: var(--text-color);
+    font-size: 1.1rem;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+.menu-item p {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.menu-item.delete {
+    background-color: rgba(204, 102, 102, 0.1); 
+    border-color: rgba(204, 102, 102, 0.3);
+}
+
+.menu-item.delete:hover {
+    background-color: rgba(204, 102, 102, 0.2); 
+    border-color: var(--warning-color);
+}
+
+.menu-item.delete h3 {
+    color: var(--warning-color);
+}
+
+/* ------------------------------------------------ */
+/* 6. Board List Styles (내 페달보드 목록 버튼 형태) */
+/* ------------------------------------------------ */
+
+.board-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.board-item {
+    margin-bottom: 0.8rem;
+}
+
+.board-link {
+    /* board-link는 페달보드 목록에 사용되며, a 태그에 적용됨 */
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    padding: 1rem 1.5rem;
+    text-decoration: none;
+    
+    background-color: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 0.75rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.board-link:hover {
+    background-color: rgba(255, 255, 255, 0.15); 
+    border-color: var(--primary-color);
+    transform: translateY(-2px); 
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5);
+}
+
+.board-info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.board-title {
+    color: var(--primary-light); 
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.board-date {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 0.2rem;
+}
+
+.board-id {
+    color: var(--secondary-color);
+    font-size: 0.85rem;
+    font-weight: 400;
+}
+
+@media (max-width: 600px) {
+    .board-link {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .board-id {
+        margin-top: 0.5rem;
+        align-self: flex-end; 
+    }
+}
+
+/* ------------------------------------------------ */
+/* 7. Effector Model Detail Styles (상세 및 폼 추가) */
+/* ------------------------------------------------ */
+
+/* 이펙터 상세 헤더 스타일 */
+.board-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.board-header h2 {
+    /* 기존 card h2의 세로 정렬을 덮어쓰고 가로 정렬 */
+    flex-direction: row;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.board-header h2 .page-icon {
+    width: 30px; /* 상세 페이지 아이콘 크기는 좀 더 작게 조정 */
+    margin-bottom: 0;
+}
+
+.board-header h2 .page-title-text,
+.board-header h2 {
+    /* EJS에서 텍스트가 바로 <h2> 밑에 있을 경우를 대비하여 텍스트 스타일 정의 */
+    font-size: 1.8rem;
+    color: var(--primary-light);
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.board-header p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+.board-header p strong {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* 파라미터 목록 (board-list 재활용) */
+.effector-chain {
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.effector-chain h3 {
+    font-size: 1.2rem;
+    color: var(--text-color);
+    border-bottom: 1px solid var(--secondary-color);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.effector-chain .board-list {
+    margin: 0;
+    margin-top: 1rem;
+}
+
+.effector-chain .board-item {
+    /* 파라미터 항목의 레이아웃 조정 */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    
+    background-color: rgba(0, 0, 0, 0.2); 
+    border: 1px solid var(--glass-border);
+    border-radius: 0.5rem;
+    margin-bottom: 0.6rem;
+}
+
+.effector-chain .board-info {
+    flex-grow: 1;
+    display: block;
+}
+
+.effector-chain .board-info h4 {
+    color: var(--primary-light);
+    font-size: 1rem;
+    margin: 0;
+    font-weight: 600;
+}
+
+.effector-chain .board-info p {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    margin: 0.2rem 0 0 0;
+}
+
+.item-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-left: 1rem;
+}
+
+/* Form Section: 파라미터 추가 폼 */
+.add-item-section {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    text-align: center;
+}
+
+/* Inset Card Style (폼 섹션을 카드 내부에 음각처럼 보이게 함) */
+.card-inset {
+    background-color: rgba(0, 0, 0, 0.15); 
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5); 
+}
+
+.add-item-section h4 {
+    color: var(--primary-color);
+    font-size: 1.1rem;
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+.add-item-form .form-group {
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.add-item-form label {
+    display: block;
+    color: var(--text-color);
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    font-size: 0.9rem;
+}
+
+.add-item-form input[type="text"] {
+    width: 100%;
+    padding: 0.7rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--glass-border);
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--text-color);
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+.add-item-form input[type="text"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background-color: rgba(255, 255, 255, 0.1);
+}

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원 탈퇴 - Dangerous Bros</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <h2>회원 탈퇴</h2>
+            <p class="warning">정말로 탈퇴하시겠습니까? 탈퇴 시 모든 데이터가 삭제될 수 있습니다.</p>
+            <form action="/mypage/delete" method="POST">
+                <div class="form-group">
+                    <label for="password">비밀번호 확인</label>
+                    <input type="password" id="password" name="password" required placeholder="현재 비밀번호 입력">
+                </div>
+                <button type="submit" class="btn btn-danger"
+                    style="background-color: #ef4444; color: white;">탈퇴하기</button>
+            </form>
+            <div class="actions">
+                <a href="/mypage" class="btn btn-secondary">취소</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

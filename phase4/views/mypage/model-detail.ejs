@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이펙터 모델 상세 - Dangerous Bros</title>
+    <link rel="stylesheet" href="/css/mypage/model-details.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <% if (model) { %>
+                <div class="board-header">
+                    <h2>
+                        <img src="/images/pick.png" alt="마이페이지 아이콘" class="page-icon">
+                        <%= model.MODEL_NAME %>
+                    </h2>
+                    <p><strong><%= model.MANUFACTURER %></strong> | <%= model.EFFECTOR_TYPE %></p>
+                </div>
+
+                <div class="effector-chain">
+                    <h3>파라미터 목록</h3>
+                    <% if (params.length === 0) { %>
+                        <p>등록된 파라미터가 없습니다.</p>
+                    <% } else { %>
+                        <ul class="board-list">
+                            <% params.forEach(function(param) { %>
+                                <li class="board-item">
+                                    <div class="board-info">
+                                        <h4><%= param.PARAMETER_NAME %></h4>
+                                        <p><%= param.DESCRIPTION %></p>
+                                    </div>
+                                    <div class="item-actions">
+                                        <form action="/mypage/parameter/<%= model.MODEL_ID %>/<%= encodeURIComponent(param.PARAMETER_NAME) %>/delete" method="POST" onsubmit="return confirm('정말로 이 파라미터를 삭제하시겠습니까?');">
+                                            <button type="submit" class="btn btn-sm btn-danger">삭제</button>
+                                        </form>
+                                    </div>
+                                </li>
+                            <% }); %>
+                        </ul>
+                    <% } %>
+                </div>
+
+                <div class="add-item-section card-inset">
+                    <h4>새 파라미터 추가</h4>
+                    <form action="/mypage/model/<%= model.MODEL_ID %>/add-parameter" method="POST" class="add-item-form">
+                        <div class="form-group">
+                            <label for="param_name">파라미터 이름</label>
+                            <input type="text" id="param_name" name="param_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="param_desc">파라미터 설명</label>
+                            <input type="text" id="param_desc" name="param_desc" required>
+                        </div>
+                        <div class="actions">
+                            <button type="submit" class="btn">파라미터 추가</button>
+                        </div>
+                    </form>
+                </div>
+
+            <% } else { %>
+                <p>존재하지 않는 모델입니다.</p>
+            <% } %>
+
+            <div class="actions">
+                <form action="/mypage/model/<%= model.MODEL_ID %>/delete" method="POST" onsubmit="return confirm('정말로 이 이펙터 모델을 삭제하시겠습니까? 관련 파라미터들이 모두 사라집니다.');">
+                    <button type="submit" class="btn btn-danger">모델 삭제</button>
+                </form>
+                <a href="<%= session.previousPage || '/mypage/models' %>" class="btn btn-secondary">뒤로가기</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
