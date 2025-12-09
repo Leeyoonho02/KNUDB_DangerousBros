@@ -6,6 +6,8 @@
 # Logs
 *.log
 
+.env
+
 # IDE settings
 .idea/
 *.iml
