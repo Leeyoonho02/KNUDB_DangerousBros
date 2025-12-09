@@ -607,24 +607,44 @@ router.get('/search/type', async (req, res) => {
 
 // Type 6: Search by Category (Like)
 router.get('/search/category', async (req, res) => {
-    const category = req.query.category;
+    const inputCategories = req.query.category; // "Rock, Blues"
     let connection;
 
     try {
         connection = await oracledb.getConnection();
+
+        const categories = inputCategories.split(/\s*,\s*/).filter(c => c.trim() !== '');
+
+        if (categories.length === 0) {
+            return res.render('explorer/list', {
+                title: '카테고리 검색 결과 (입력 없음)',
+                boards: []
+            });
+        }
+
+        const bindValues = {};
+        const whereConditions = [];
+        for (let i = 0; i < categories.length; i++) {
+            const bindName = `cat${i}`;
+            whereConditions.push(`P.Pedalboard_category LIKE :${bindName}`);
+            bindValues[bindName] = `%${categories[i]}%`;
+        }
+
         const sql = `
-            SELECT p.Pedalboard_ID, p.Pedalboard_name, p.Registeration_date, u.User_name, NVL(AVG(r.Rating_Value), 0) AS AVG_RATING
+            SELECT p.Pedalboard_ID, p.Pedalboard_name, p.Registeration_date, p.Pedalboard_category, u.User_name, NVL(AVG(r.Rating_Value), 0) AS AVG_RATING
             FROM PEDALBOARD p
             JOIN USR u ON p.User_ID = u.User_ID
             LEFT JOIN RATING r ON p.Pedalboard_ID = r.Pedalboard_ID
-            WHERE p.Pedalboard_name LIKE '%' || :category || '%'
-            GROUP BY p.Pedalboard_ID, p.Pedalboard_name, p.Registeration_date, u.User_name
+            WHERE ${whereConditions.join(' OR ')}
+            GROUP BY p.Pedalboard_ID, p.Pedalboard_name, p.Registeration_date, p.Pedalboard_category, u.User_name
+            ORDER BY p.Registeration_date DESC
         `;
-        const result = await connection.execute(sql, [category], { outFormat: oracledb.OUT_FORMAT_OBJECT });
+
+        const result = await connection.execute(sql, bindValues, { outFormat: oracledb.OUT_FORMAT_OBJECT });
 
 
         res.render('explorer/list', {
-            title: `'${category}' 카테고리(이름) 검색 결과`,
+            title: `'${inputCategories}' 카테고리 검색 결과`,
             boards: result.rows
         });
     } catch (err) {
