@@ -7,20 +7,22 @@
     <title>
         <%= title %>
     </title>
-    <link rel="stylesheet" href="/css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <div class="container">
         <header>
-            <h1>🎸 Dangerous Bros Pedalboard System</h1>
+            <h1>
+                
+                <img src="/images/logoreal.png" alt="Dangerous Bros Pedalboard System Logo" class="logo-image"></h1>
             <p>Phase 4: Web Application</p>
         </header>
 
         <main>
             <div class="card">
-                <h2>Welcome</h2>
+                
                 <% if (user) { %>
                     <p>안녕하세요, <strong>
                             <%= user.name %>
@@ -32,7 +34,7 @@
                         <a href="/auth/logout" class="btn" style="background-color: #ef4444; color: white;">로그아웃</a>
                     </div>
                     <% } else { %>
-                        <p>페달보드 관리 시스템에 오신 것을 환영합니다.</p>
+                        <p>톤을 탐색하고, 공유하고, 연결되세요</p>
                         <div class="actions">
                             <a href="/auth/login" class="btn btn-primary">로그인</a>
                             <a href="/auth/register" class="btn btn-secondary">회원가입</a>

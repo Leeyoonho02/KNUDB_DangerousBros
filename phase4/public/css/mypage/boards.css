@@ -1,0 +1,279 @@
+/* ============================================== */
+/* 1. Global Variables (Softer Dark Theme)        */
+/* ============================================== */
+:root {
+    /* --- Low Saturation & Modern Tones (Softer Dark Base) --- */
+    --primary-color: #7A9BBE; /* 부드러운 푸른빛 회색 */
+    --primary-light: #B0C4DE; 
+    --primary-hover: #6080A0;
+    --secondary-color: #A0A0A0; /* 중성적인 회색 */
+    
+    /* 배경: 더 부드러운 다크 톤 */
+    --background-color: #2A2A2A; 
+    --glass-bg: rgba(255, 255, 255, 0.1); 
+    --glass-border: rgba(255, 255, 255, 0.2); 
+    
+    --text-color: #EAEAEA; 
+    --text-muted: #B0B0B0; 
+    --warning-color: #CC6666; 
+}
+
+/* ------------------------------------------------ */
+/* 2. Global & Body Styles                          */
+/* ------------------------------------------------ */
+body {
+    /* Montserrat 폰트 적용 */
+    font-family: 'Montserrat', sans-serif; 
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    /* 배경 그라디언트 (Softer Dark) - 변수 사용 */
+    background: linear-gradient(135deg, var(--background-color) 0%, #1A1A1A 100%);
+}
+
+.container {
+    width: 100%;
+    max-width: 700px;
+    padding: 2rem;
+    text-align: center;
+}
+
+/* ------------------------------------------------ */
+/* 3. Card Styles (Glassy Effect) & Page Header (Icon + Text) */
+/* ------------------------------------------------ */
+.card {
+    background-color: var(--glass-bg);
+    padding: 3rem; 
+    border-radius: 1.5rem;
+    border: 1px solid var(--glass-border);
+    
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* <h2> 태그 (아이콘과 텍스트를 담는 헤더 컨테이너) */
+.card h2 {
+    display: flex;
+    flex-direction: column; /* 세로 정렬 */
+    align-items: center; /* 중앙 정렬 */
+    
+    font-size: 0; 
+    margin-bottom: 1rem; 
+    margin-top: 0; 
+}
+
+/* 페이지 아이콘 이미지 스타일 */
+.card h2 img.page-icon {
+    width: 70px; /* 아이콘 크기 설정 */
+    height: auto;
+    margin-bottom: 0.5rem; 
+    
+    filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
+    transition: transform 0.3s ease;
+}
+
+/* 페이지 제목 텍스트 스타일 */
+.card h2 span.page-title-text {
+    color: var(--primary-light);
+    font-size: 1.8rem; /* 제목 크기 */
+    font-weight: 700;
+    line-height: 1.1; 
+}
+
+.card p {
+    color: var(--text-color);
+}
+
+/* ------------------------------------------------ */
+/* 4. Button Styles (Global Actions) */
+/* ------------------------------------------------ */
+.actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.8rem 1.8rem;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+/* Primary Button */
+.btn-primary {
+    background: linear-gradient(145deg, #6080A0 0%, #486682 100%);
+    color: white;
+    box-shadow: 0 5px 12px rgba(96, 128, 160, 0.6);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(145deg, #486682 0%, #6080A0 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 7px 15px rgba(96, 128, 160, 0.8);
+}
+
+/* Secondary Button */
+.btn-secondary {
+    background: linear-gradient(145deg, #707070 0%, #5A5A5A 100%);
+    color: white;
+    box-shadow: 0 5px 12px rgba(112, 112, 112, 0.5);
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(145deg, #5A5A5A 0%, #707070 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 7px 15px rgba(112, 112, 112, 0.7);
+}
+
+/* ------------------------------------------------ */
+/* 5. Mypage Menu Styles (2x3 Grid View) */
+/* ------------------------------------------------ */
+
+.menu-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 1.2rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+    .menu-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+.menu-item {
+    display: block; 
+    text-align: left;
+    padding: 1.5rem;
+    
+    background-color: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 1rem;
+    
+    text-decoration: none;
+    color: var(--text-color);
+    transition: all 0.3s ease;
+    
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.menu-item:hover {
+    background-color: rgba(255, 255, 255, 0.15); 
+    border-color: var(--primary-color);
+    transform: translateY(-3px); 
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5);
+}
+
+.menu-item h3 {
+    color: var(--text-color);
+    font-size: 1.1rem;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+.menu-item p {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.menu-item.delete {
+    background-color: rgba(204, 102, 102, 0.1); 
+    border-color: rgba(204, 102, 102, 0.3);
+}
+
+.menu-item.delete:hover {
+    background-color: rgba(204, 102, 102, 0.2); 
+    border-color: var(--warning-color);
+}
+
+.menu-item.delete h3 {
+    color: var(--warning-color);
+}
+
+/* ------------------------------------------------ */
+/* 6. Board List Styles (버튼 형태 목록) */
+/* ------------------------------------------------ */
+
+.board-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.board-item {
+    margin-bottom: 0.8rem;
+}
+
+.board-link {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    padding: 1rem 1.5rem;
+    text-decoration: none;
+    
+    /* Glassy/버튼 스타일 */
+    background-color: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 0.75rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.board-link:hover {
+    background-color: rgba(255, 255, 255, 0.15); 
+    border-color: var(--primary-color);
+    transform: translateY(-2px); 
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5);
+}
+
+.board-info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.board-title {
+    color: var(--primary-light); 
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.board-date {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 0.2rem;
+}
+
+.board-id {
+    color: var(--secondary-color);
+    font-size: 0.85rem;
+    font-weight: 400;
+}
+
+@media (max-width: 600px) {
+    .board-link {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .board-id {
+        margin-top: 0.5rem;
+        align-self: flex-end; 
+    }
+}

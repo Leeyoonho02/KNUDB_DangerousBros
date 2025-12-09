@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %> - Dangerous Bros
+    </title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <h2>
+                <%= title %>
+            </h2>
+
+            <% if (data.length===0) { %>
+                <p>데이터가 없습니다.</p>
+                <% } else { %>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <% columns.forEach(function(col) { %>
+                                        <th>
+                                            <%= col %>
+                                        </th>
+                                        <% }); %>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% data.forEach(function(row) { %>
+                                    <tr>
+                                        <% columns.forEach(function(col) { %>
+                                            <td>
+                                                <% if (title === '페달보드 평균 평점' && col === 'PEDALBOARD_NAME') { %>
+                                                    <a href="/explorer/board/<%= row.PEDALBOARD_ID %>">
+                                                        <%= row.PEDALBOARD_NAME %>
+                                                    </a>
+                                                <% } else if (col === 'AVG_RATING') { %>
+                                                    <%= row[col].toFixed(1) %>
+                                                <% } else { %>
+                                                    <%= row[col] %>
+                                                <% } %>
+                                            </td>
+                                            <% }); %>
+                                    </tr>
+                                    <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                    <% } %>
+
+                        <div class="actions">
+                            <a href="/statistics" class="btn btn-secondary">목록으로</a>
+                        </div>
+        </div>
+    </div>
+</body>
+
+</html>

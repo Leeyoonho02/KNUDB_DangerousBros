@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>보드 상세 - Dangerous Bros</title>
+    <link rel="stylesheet" href="/css/explorer/details.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <% if (board) { %>
+                <div class="board-header">
+                    <h2>
+                        <%= board.PEDALBOARD_NAME %>
+                    </h2>
+                    <p>작성자: 
+                            <%= board.USER_NAME %>
+                        등록일: <%= new Date(board.REGISTERATION_DATE).toLocaleDateString() %>
+                    </p>
+                    <p>
+                        평균 평점: <strong><%= avgRating.toFixed(1) %> / 5.0</strong>
+                    </p>
+                    <% if (user) { %>
+                        <p>내 평점: <%= myRating !== null ? myRating : '없음' %></p>
+                        <% if (myRating === null && user.id !== board.USER_ID) { %>
+                            <div class="add-item-section card-inset">
+                                <h4>이 페달보드 평가하기</h4>
+                                <form action="/explorer/board/<%= board.PEDALBOARD_ID %>/rate" method="POST">
+                                    <div class="form-group">
+                                        <label for="rating">평점 (1-5)</label>
+                                        <input type="number" id="rating" name="rating" min="1" max="5" required>
+                                    </div>
+                                    <div class="actions">
+                                        <button type="submit" class="btn">평가하기</button>
+                                    </div>
+                                </form>
+                            </div>
+                        <% } %>
+                    <% } %>
+                </div>
+
+                <div class="effector-chain">
+                    <h3>이펙터 체인</h3>
+                    <% if (items.length===0) { %>
+                        <p>등록된 이펙터가 없습니다.</p>
+                        <% } else { %>
+                            <div class="chain-list">
+                                <% items.forEach(function(item) { %>
+                                    <div class="chain-item">
+                                        <div class="item-order">
+                                            <%= item.CHAIN_ORDER %>
+                                        </div>
+                                        <div class="item-details">
+                                            <h4><a href="/explorer/board/<%= board.PEDALBOARD_ID %>/item/<%= item.ITEM_ID %>"><%= item.MODEL_NAME %></a></h4>
+                                            <p class="item-type">
+                                                <%= item.EFFECTOR_TYPE %>
+                                            </p>
+                                            <div class="item-params">
+                                                <% if (item.PARAMETERS.length > 0) { %>
+                                                    <% item.PARAMETERS.forEach(function(param) { %>
+                                                        <span class="param">
+                                                            <%= param.PARAMETER_NAME %>: <%= param.ACTUAL_VALUE %>
+                                                        </span>
+                                                    <% }); %>
+                                                <% } else { %>
+                                                    <span class="param-empty">파라미터 정보 없음</span>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                        <% if (user && user.id === board.USER_ID) { %>
+                                            <div class="item-actions">
+                                                <form action="/explorer/item/<%= item.ITEM_ID %>/delete" method="POST" onsubmit="return confirm('이 이펙터를 체인에서 삭제하시겠습니까?');">
+                                                    <input type="hidden" name="boardId" value="<%= board.PEDALBOARD_ID %>">
+                                                    <button type="submit" class="btn btn-sm btn-danger">삭제</button>
+                                                </form>
+                                            </div>
+                                        <% } %>
+                                    </div>
+                                    <% }); %>
+                            </div>
+                            <% } %>
+                </div>
+
+                <% if (user && user.id === board.USER_ID) { %>
+                    <div class="add-item-section card-inset">
+                        <h4>체인에 이펙터 추가</h4>
+                        <form action="/explorer/board/<%= board.PEDALBOARD_ID %>/add-item" method="POST" class="add-item-form">
+                            <div class="form-group">
+                                <label for="model-search">이펙터 모델 검색</label>
+                                <input type="text" id="model-search" placeholder="모델명, 제조사 등으로 검색...">
+                            </div>
+                            <div class="form-group">
+                                <label for="model">이펙터 모델</label>
+                                <select name="model" id="model" required>
+                                    <option value="" disabled selected>모델 선택</option>
+                                    <% models.forEach(function(model) { %>
+                                        <option value="<%= model.MODEL_ID %>"><%= model.MANUFACTURER %> <%= model.MODEL_NAME %></option>
+                                    <% }); %>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="order">연결 순서</label>
+                                <input type="number" name="order" id="order" required>
+                            </div>
+    
+                            <div class="actions">
+                                <button type="submit" class="btn">추가</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="actions">
+                        <form action="/explorer/board/<%= board.PEDALBOARD_ID %>/delete" method="POST" onsubmit="return confirm('정말로 이 페달보드를 삭제하시겠습니까? 관련된 모든 데이터가 사라집니다.');">
+                            <button type="submit" class="btn btn-danger">페달보드 삭제</button>
+                        </form>
+                    </div>
+                <% } %>
+                
+            <% } else { %>
+                <p>존재하지 않는 페달보드입니다.</p>
+            <% } %>
+
+                        <div class="actions">
+                            <a href="<%= explorerReturnPath || '/explorer' %>" class="btn btn-secondary">뒤로가기</a>
+                        </div>
+        </div>
+    </div>
+    <script>
+        const modelSearch = document.getElementById('model-search');
+        if (modelSearch) {
+            modelSearch.addEventListener('keyup', function() {
+                const searchTerm = this.value.toLowerCase();
+                const modelSelect = document.getElementById('model');
+                const options = modelSelect.getElementsByTagName('option');
+
+                for (let i = 0; i < options.length; i++) {
+                    const option = options[i];
+                    const optionText = option.textContent.toLowerCase();
+                    if (option.value && optionText.includes(searchTerm)) {
+                        option.style.display = 'block';
+                    } else if (option.value) {
+                        option.style.display = 'none';
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

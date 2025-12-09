@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>내 페달보드 - Dangerous Bros</title>
+    <link rel="stylesheet" href="/css/mypage/boards.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <h2>
+                <img src="/images/pick.png" alt="마이페이지 아이콘" class="page-icon">
+                <!--<img src="/images/pick.png" alt="픽 아이콘" class="page-icon">-->
+                <span class="page-title-text">내 페달보드 목록</span>
+            </h2>
+
+            <% if (boards.length === 0) { %>
+                <p>등록된 페달보드가 없습니다.</p>
+            <% } else { %>
+                <ul class="board-list">
+                    <% boards.forEach(function(board) { %>
+                        <li class="board-item">
+                            <a href="/explorer/board/<%= board.PEDALBOARD_ID %>" class="board-link">
+                                <div class="board-info">
+                                    <span class="board-title"><%= board.PEDALBOARD_NAME %></span>
+                                    <span class="board-date">등록일: <%= new Date(board.REGISTERATION_DATE).toLocaleDateString() %></span>
+                                </div>
+                                <div class="board-id">
+                                    ID: <%= board.PEDALBOARD_ID %>
+                                </div>
+                            </a>
+                        </li>
+                    <% }); %>
+                </ul>
+            <% } %>
+
+            <div class="actions">
+                <a href="/mypage" class="btn btn-secondary">뒤로가기</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

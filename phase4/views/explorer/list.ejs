@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>검색 결과 - Dangerous Bros</title>
+    <link rel="stylesheet" href="/css/explorer/list.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <h2>
+                <%= title %>
+            </h2>
+
+            <% if (boards.length===0) { %>
+                <p>검색 결과가 없습니다.</p>
+                <% } else { %>
+                    <ul class="board-list">
+                        <% boards.forEach(function(board) { %>
+                            <li class="board-item">
+                                <div class="board-info">
+                                    <h3><a href="/explorer/board/<%= board.PEDALBOARD_ID %>">
+                                            <%= board.PEDALBOARD_NAME %>
+                                        </a></h3>
+                                    <p>작성자: <%= board.USER_NAME || board.USER_ID %>
+                                    </p>
+                                    <p>등록일: <%= new Date(board.REGISTERATION_DATE).toLocaleDateString() %>
+                                    </p>
+                                    <% if (board.AVG_RATING !== undefined && board.AVG_RATING !== null) { %>
+                                        <p>평점: <strong><%= board.AVG_RATING.toFixed(1) %> / 5.0</strong></p>
+                                    <% } else if (board.avg_rating !== undefined && board.avg_rating !== null) { %>
+                                        <p>평점: <strong><%= board.avg_rating.toFixed(1) %> / 5.0</strong></p>
+                                    <% } %>
+                                </div>
+                                <div class="board-meta">
+                                    <span class="badge">
+                                        <%= board.PEDALBOARD_ID %>
+                                    </span>
+                                </div>
+                            </li>
+                            <% }); %>
+                    </ul>
+                    <% } %>
+
+                        <div class="actions">
+                            <a href="/explorer" class="btn btn-secondary">다시 검색</a>
+                        </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이펙터 파라미터 관리 - Dangerous Bros</title>
+    <link rel="stylesheet" href="/css/explorer/item-manage-params.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <% if (item) { %>
+                <div class="board-header">
+                    <h2><%= item.MODEL_NAME %> 파라미터 관리</h2>
+                    <p>페달보드 ID: <%= item.PEDALBOARD_ID %> | 이펙터 ID: <%= item.ITEM_ID %> | 순서: <%= item.CHAIN_ORDER %></p>
+                </div>
+
+                <div class="add-item-section card-inset">
+                    <h4>파라미터 값 설정/수정</h4>
+                    <form action="/explorer/board/<%= item.PEDALBOARD_ID %>/item/<%= item.ITEM_ID %>/save-params" method="POST">
+                        <% if (allParams.length === 0) { %>
+                            <p>이 모델에 설정 가능한 파라미터가 없습니다.</p>
+                        <% } else { %>
+                            <% allParams.forEach(function(paramDef) { %>
+                                <div class="form-group">
+                                    <label for="<%= paramDef.PARAMETER_NAME %>"><%= paramDef.PARAMETER_NAME %> (<%= paramDef.DESCRIPTION %>)</label>
+                                    <input type="text" 
+                                           id="<%= paramDef.PARAMETER_NAME %>" 
+                                           name="param_<%= paramDef.PARAMETER_NAME %>" 
+                                           value="<%= currentParams[paramDef.PARAMETER_NAME] || '' %>"
+                                           placeholder="값 입력 (비워두면 삭제)">
+                                </div>
+                            <% }); %>
+                        <% } %>
+                        <div class="actions">
+                            <button type="submit" class="btn">저장</button>
+                        </div>
+                    </form>
+                </div>
+
+            <% } else { %>
+                <p>이펙터 아이템을 찾을 수 없습니다.</p>
+            <% } %>
+
+            <div class="actions">
+                <a href="/explorer/board/<%= boardId %>" class="btn btn-secondary">페달보드로 돌아가기</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

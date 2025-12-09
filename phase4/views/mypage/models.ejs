@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>내 이펙터 모델 - Dangerous Bros</title>
+    <link rel="stylesheet" href="/css/mypage/models.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h2><img src="/images/pick.png" alt="마이페이지 아이콘" class="page-icon">
+                <span class="page-title-text">내 이펙터 목록</span></h2>
+
+            <% if (models.length === 0) { %>
+                <p>등록한 이펙터 모델이 없습니다.</p>
+            <% } else { %>
+                <ul class="board-list">
+                    <% models.forEach(function(model) { %>
+                        <li class="board-item">
+                            <div class="board-info">
+                                <h3><a href="/mypage/model/<%= model.MODEL_ID %>"><%= model.MODEL_NAME %></a></h3>
+                                <p>제조사: <%= model.MANUFACTURER %></p>
+                                <p>종류: <%= model.EFFECTOR_TYPE %></p>
+                            </div>
+                            <div class="board-id">ID: <%= model.MODEL_ID %></div>
+                        </li>
+                    <% }); %>
+                </ul>
+            <% } %>
+
+            <div class="actions">
+                <a href="/mypage" class="btn btn-secondary">마이페이지로</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
