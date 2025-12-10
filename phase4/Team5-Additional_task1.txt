@@ -1,13 +1,69 @@
-[Concurrency Control Strategy]
+# Team5 – 동시성 제어 및 트랜잭션 처리 기술서
 
-1. Connection Pooling
-   - We utilize the connection pooling feature provided by the oracledb driver.
-   - This allows multiple users to share a reusable set of physical connections, managing resources efficiently and handling concurrent requests.
+## 1. 동시성 문제의 발생 가능성 및 제어의 필요성
 
-2. Transaction Management
-   - Critical database operations (INSERT, UPDATE, DELETE) are wrapped in transactions.
-   - We ensure that commit is called only after all related operations succeed.
-   - If any operation fails, rollback is triggered to maintain data consistency and integrity.
+본 프로젝트는 다수의 사용자가 동시에 접속하여 데이터를 조회하고 수정하는 웹 애플리케이션입니다. 이와 같은 다중 사용자 환경에서는 여러 트랜잭션이 동일한 데이터에 동시에 접근할 때 얘기치 않은 문제가 발생할 수 있으며, 이를 '동시성 문제'라고 합니다.
 
-3. Session Management
-   - express-session is used to maintain user state across concurrent requests, ensuring that one user's actions do not interfere with another's session data.
+동시성 제어에 실패할 경우, 데이터베이스는 다음과 같은 심각한 문제에 직면하게 되어 데이터의 일관성(Consistency)과 무결성(Integrity)이 파괴될 수 있습니다.
+이러한 문제들을 방지하고, 어떤 상황에서도 데이터베이스의 안정성을 보장하기 위해 저희는 트랜잭션 기반의 동시성 제어 전략을 도입했습니다.
+
+## 2. 우리 프로젝트에서 발생할 수 있었던 동시성 실패 사례
+
+만약 동시성 제어를 적용하지 않았다면, 본 프로젝트의 핵심 기능들에서 다음과 같은 심각한 데이터 불일치 문제가 발생했을 것입니다.
+
+### 2.1. 사례 1: 페달보드 삭제 시
+-시나리오:
+  1. 사용자 A가 자신의 페달보드 (ID: 101) 삭제를 요청합니다. 서버는 관련 'RATING', 'BOARD_ITEM' 등을 순차적으로 삭제하기 시작합니다.
+  2. 동시에 사용자 B가 페달보드 101번을 조회하고, 그 보드에 포함된 특정 이펙터(아이템)의 파라미터 값을 수정하는 요청을 보냅니다.
+-예상 문제: 사용자 A의 'DELETE' 작업과 사용자 B의 'UPDATE' 작업이 동시에 실행되면서 Race Condition이 발생합니다. 최악의 경우, 이미 삭제되었어야 할 아이템의 파라미터 값이 수정되거나, 삭제 작업 도중 'UPDATE'가 끼어들어 예기치 않은 오류를 발생시킬 수 있습니다.
+
+### 2.2. 사례 2: 페달보드에 아이템 추가 시
+-시나리오: 페달보드에 새 아이템을 순서 2번에 추가하는 작업은 다음 두 단계로 구성됩니다.
+  1. 'UPDATE': 기존 2번 이후의 모든 아이템 순서를 'Chain_order + 1'로 변경.
+  2. 'INSERT': 새로운 아이템을 순서 2번에 추가.
+-예상 문제: 만약 1번 'UPDATE' 작업은 성공했지만, 네트워크 오류나 제약조건 위반으로 2번 'INSERT' 작업이 실패하면, 페달보드에는 순서 2번이 비어있는 '구멍'이 생기게 됩니다. 이는 부분 업데이트의 전형적인 사례로, 데이터 불일치를 유발합니다.
+
+### 2.3. 사례 3: 회원 탈퇴 시
+-시나리오: 회원 탈퇴는 사용자의 'USR' 정보뿐만 아니라, 해당 사용자가 작성한 'PEDALBOARD', 'EFFECTOR_MODEL', 'RATING' 등 모든 연관 데이터를 삭제하는 복잡한 과정입니다.
+-예상 문제: 만약 'PEDALBOARD'까지는 성공적으로 삭제했지만, 'RATING' 정보를 삭제하던 중 오류가 발생하여 작업이 중단된다면, 데이터베이스에는 주인을 잃은 '고아 데이터'들이 대거 남게 됩니다. 이는 시스템의 참조 무결성을 심각하게 훼손합니다.
+
+## 3. 해결 전략: 트랜잭션 기반의 원자적 작업 보장
+
+위와 같은 동시성 문제들을 해결하기 위해, 저희는 프로젝트의 모든 데이터베이스 쓰기 작업(INSERT, UPDATE, DELETE)에 트랜잭션을 적용하여 원자성을 보장하는 통일된 처리 패턴을 수립했습니다.
+
+-패턴 요약:
+  1. 데이터베이스 커넥션 획득 후, 'node-oracledb'의 기본 설정('autoCommit=false')을 활용하여 트랜잭션을 암시적으로 시작합니다.
+  2. 'try' 블록 내에서 하나의 논리적 단위로 묶여야 할 모든 SQL 작업을 순차적으로 실행합니다.
+  3. 'try' 블록의 모든 작업이 성공적으로 완료되면, 마지막에 'connection.commit()'을 호출하여 모든 변경사항을 데이터베이스에 영구적으로 반영합니다.
+  4. 'catch' 블록에서는 작업 도중 어떤 오류라도 발생할 경우, 즉시 'connection.rollback()'을 호출하여 트랜잭션 시작 전의 상태로 데이터베이스를 완벽하게 되돌립니다.
+  5. 'finally' 블록을 통해 작업의 성공/실패 여부와 관계없이 사용된 커넥션은 반드시 'connection.close()'를 통해 커넥션 풀에 반환되도록 보장합니다.
+
+이 패턴을 프로젝트 전체에 일관되게 적용함으로써, 여러 DML 작업이 포함된 복잡한 로직이라도 마치 '단 하나의 작업'처럼 원자적으로 처리되도록 구현했습니다.
+
+## 4. 파일별 트랜잭션 적용 현황
+
+모든 코드 분석 및 수정을 통해, 현재 코드베이스의 모든 쓰기 작업 관련 라우트는 아래와 같이 완벽한 트랜잭션 처리를 보장합니다.
+
+-'routes/auth.js':
+  -'POST /register' (회원가입): 단일 'INSERT' 작업에 대해 'commit'/'rollback'을 적용하여 원자성을 보장합니다.
+-'routes/explorer.js':
+  -'POST /item/:itemId/delete' (아이템 삭제): 3단계 DML 작업을 트랜잭션으로 묶어 안전하게 처리합니다.
+  -'POST /board/:id/add-item' (아이템 추가): 'UPDATE'와 'INSERT' 작업을 트랜잭션으로 묶어 부분 업데이트 문제를 방지합니다.
+  -'POST /board/:id/delete' (페달보드 삭제): 4개 테이블에 걸친 다단계 삭제를 트랜잭션으로 안전하게 처리합니다.
+  -'POST /.../save-params' (파라미터 저장): 반복문 내의 복잡한 CUD 로직 전체를 단일 트랜잭션으로 묶어 처리하는 모범 사례입니다.
+  -'POST /board/:id/rate' (평점 부여): 단일 'INSERT' 작업에 트랜잭션을 적용했습니다.
+-'routes/mypage.js':
+  -'POST /update' (회원 정보 수정): 'UPDATE' 작업에 트랜잭션을 적용했습니다.
+  -'POST /delete' (회원 탈퇴): 가장 복잡한 다단계 삭제 작업을 단일 트랜잭션으로 묶어 데이터 무결성을 완벽하게 보장합니다.
+  -기타 모든 쓰기 작업 ('/add-board', '/add-model' 등): 모두 표준 트랜잭션 처리 패턴을 따릅니다.
+-'routes/index.js', 'routes/statistics.js':
+  -읽기 전용('SELECT') 작업만 수행하므로 트랜잭션 적용 대상이 아닙니다.
+
+## 5. 동시성 제어 적용 효과
+
+트랜잭션 기반의 동시성 제어 전략을 프로젝트 전체에 적용함으로써 다음과 같은 효과를 얻었습니다.
+
+-데이터 무결성 및 일관성 보장: 'Lost Update', 'Dirty Read' 등의 문제를 원천적으로 방지하고, 어떤 상황에서도 데이터베이스가 모순된 상태에 빠지지 않도록 보장합니다.
+-부분 업데이트 방지: 다단계 작업이 중간에 실패하더라도 'rollback'을 통해 작업 전 상태로 복구되므로, '고아 데이터'나 '불완전한 데이터'가 생성되지 않습니다.
+-Race Condition 위험 감소: 여러 사용자가 동시에 동일한 데이터에 대한 수정을 요청하더라도, 트랜잭션 격리 수준(Isolation Level, 이 경우 Oracle의 기본값인 'Read Committed')에 따라 순차적으로 처리되어 데이터 덮어쓰기 등의 문제를 방지합니다.
+-안정적인 다중 사용자 서비스 제공: 여러 사용자가 동시에 접속하여 다양한 기능을 사용하더라도, 서버는 안정적으로 데이터의 정합성을 유지하며 신뢰도 높은 서비스를 제공할 수 있습니다.
