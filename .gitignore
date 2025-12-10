@@ -6,9 +6,9 @@
 # Logs
 *.log
 
-.env
+# .env
 
-# IDE settings
+# IDE settings  
 .idea/
 *.iml
 .vscode/
