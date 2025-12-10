@@ -35,13 +35,13 @@ const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
 const mypageRouter = require('./routes/mypage');
 const explorerRouter = require('./routes/explorer');
-//const statisticsRouter = require('./routes/statistics');
+const statisticsRouter = require('./routes/statistics');
 
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/mypage', mypageRouter);
 app.use('/explorer', explorerRouter);
-//app.use('/statistics', statisticsRouter);
+app.use('/statistics', statisticsRouter);
 
 // 서버 로그 및 시작
 async function startServer() {
