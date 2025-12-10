@@ -265,44 +265,56 @@ router.post('/board/:id/add-item', requireLogin, async (req, res) => {
             return res.send('<script>alert("이미 해당 모델이 페달보드에 추가되어 있습니다."); window.location.href="/explorer/board/'+pedalboardId+'";</script>');
         }
 
-        // 체인 오더 만들기
-        const updateSql = `
-            UPDATE BOARD_ITEM 
-            SET Chain_order = Chain_order + 1 
-            WHERE Pedalboard_ID = :pedalboardId AND Chain_order >= :chainOrder
-        `;
-        await connection.execute(updateSql, {
-            pedalboardId: pedalboardId,
-            chainOrder: order
-        });
-
-        // 현재 보드 최대 chain order 조회
-        const maxOrderResult = await connection.execute(`SELECT NVL(MAX(Chain_order), 0) AS MAX_ORDER FROM BOARD_ITEM WHERE Pedalboard_ID = :pedalboardId`, { pedalboardId }, { outFormat: oracledb.OUT_FORMAT_OBJECT });
-        const maxOrder = maxOrderResult.rows[0].MAX_ORDER;
-
-        // 만약 입력된 order가 최대값보다 크면 최대값+1로 자동 설정
-        let adjustedOrder = order;
-        if (adjustedOrder > maxOrder + 1) {
-            adjustedOrder = maxOrder + 1;
-        }
-
-        const insertSql = `
-            INSERT INTO BOARD_ITEM (Item_ID, Pedalboard_ID, Model_ID, Chain_order)
-            VALUES (board_item_seq.NEXTVAL, :pedalboardId, :modelId, :chainOrder)
-        `;
-
-        await connection.execute(insertSql, {
-            pedalboardId: pedalboardId,
-            modelId: model,
-            chainOrder: adjustedOrder
-        });
+                // 현재 보드 최대 chain order 조회
+                const maxOrderResult = await connection.execute(`SELECT NVL(MAX(Chain_order), 0) AS MAX_ORDER FROM BOARD_ITEM WHERE Pedalboard_ID = :pedalboardId`, { pedalboardId }, { outFormat: oracledb.OUT_FORMAT_OBJECT });
+                const maxOrder = maxOrderResult.rows[0].MAX_ORDER;
         
+                // 입력된 order를 정수로 변환하고 새 규칙에 따라 adjustedOrder 계산
+                let adjustedOrder = parseInt(order, 10);
+        
+                // Rule 1: 1보다 작으면 1로 자동 설정
+                if (adjustedOrder < 1) {
+                    adjustedOrder = 1;
+                }
+                // Rule 2: (maxOrder + 1)보다 크면 (maxOrder + 1)로 자동 설정
+                if (adjustedOrder > maxOrder + 1) {
+                    adjustedOrder = maxOrder + 1;
+                }
+        
+                // 기존 아이템들의 Chain_order를 뒤로 밀어서 새 아이템이 들어갈 공간 확보
+                const updateSql = `
+                    UPDATE BOARD_ITEM
+                    SET Chain_order = Chain_order + 1
+                    WHERE Pedalboard_ID = :pedalboardId AND Chain_order >= :adjustedOrder
+                `;
+                await connection.execute(updateSql, {
+                    pedalboardId: pedalboardId,
+                    adjustedOrder: adjustedOrder // 조정된 Chain_order 사용
+                });
+        
+                const insertSql = `
+                    INSERT INTO BOARD_ITEM (Item_ID, Pedalboard_ID, Model_ID, Chain_order)
+                    VALUES (board_item_seq.NEXTVAL, :pedalboardId, :modelId, :adjustedOrder)
+                `;
+        
+                await connection.execute(insertSql, {
+                    pedalboardId: pedalboardId,
+                    modelId: model,
+                    adjustedOrder: adjustedOrder // 조정된 Chain_order 사용
+                });        
         await connection.commit();
 
         res.redirect(`/explorer/board/${pedalboardId}`);
 
     } catch (err) {
         console.error("Error adding item to board:", err);
+        if (connection) {
+            try {
+                await connection.rollback();
+            } catch (rbErr) {
+                console.error('Error during rollback:', rbErr);
+            }
+        }
         res.status(500).send("Server Error while adding item to board.");
     } finally {
         if (connection) {

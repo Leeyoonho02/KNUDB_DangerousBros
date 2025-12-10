@@ -79,6 +79,13 @@ router.post('/update', async (req, res) => {
         res.send('<script>alert("회원 정보가 수정되었습니다."); window.location.href="/mypage";</script>');
     } catch (err) {
         console.error(err);
+        if (connection) {
+            try {
+                await connection.rollback();
+            } catch (rbErr) {
+                console.error(rbErr);
+            }
+        }
         res.send('<script>alert("회원 정보 수정 실패."); window.location.href="/mypage/update";</script>');
     } finally {
         if (connection) {
@@ -231,6 +238,13 @@ router.post('/delete', async (req, res) => {
         }
     } catch (err) {
         console.error(err);
+        if (connection) {
+            try {
+                await connection.rollback();
+            } catch (rbErr) {
+                console.error('Error during rollback:', rbErr);
+            }
+        }
         res.status(500).send("Server Error");
     } finally {
         if (connection) {
@@ -245,7 +259,13 @@ router.post('/delete', async (req, res) => {
 
 // GET 페달보드 추가
 router.get('/add-board', (req, res) => {
-    res.render('mypage/add-board');
+    //뒤로가기 처리
+    if (req.headers.referer) {
+        req.session.previousPage = req.headers.referer;
+    } else {
+        req.session.previousPage = '/mypage/boards'; //기본
+    }
+    res.render('mypage/add-board', { session: req.session });
 });
 
 // POST 페달보드 추가
@@ -335,10 +355,13 @@ router.get('/model/:id', async (req, res) => {
         }
         
         //뒤로가기 처리(여러 곳에서 호출 가능하므로 세션에 저장)
-        if (req.headers.referer) {
-            req.session.previousPage = req.headers.referer;
-        } else {
-            req.session.previousPage = '/mypage/models'; //기본
+        const referrer = req.headers.referer;
+        // Only update the previousPage if the user is coming from a different page.
+        if (referrer && !referrer.includes(`/mypage/model/${modelId}`)) {
+            req.session.previousPage = referrer;
+        } else if (!req.session.previousPage) {
+            // If previousPage is not set at all, set a sensible default.
+            req.session.previousPage = '/mypage/models';
         }
 
         // 2. 파라미터 조회
@@ -347,7 +370,8 @@ router.get('/model/:id', async (req, res) => {
 
         res.render('mypage/model-detail', {
             model: modelResult.rows[0],
-            params: paramsResult.rows
+            params: paramsResult.rows,
+            session: req.session
         });
 
     } catch (err) {
@@ -505,7 +529,7 @@ router.get('/add-model', (req, res) => {
     } else {
         req.session.previousPage = '/mypage/models'; //기본
     }
-    res.render('mypage/add-model');
+    res.render('mypage/add-model', { session: req.session });
 });
 
 // POST 이펙터 모델 추가
