@@ -2,7 +2,7 @@
 
 1. Connection Pooling
    - We utilize the connection pooling feature provided by the oracledb driver.
-   - This allows multiple users to share a reuseable set of physical connections, managing resources efficiently and handling concurrent requests.
+   - This allows multiple users to share a reusable set of physical connections, managing resources efficiently and handling concurrent requests.
 
 2. Transaction Management
    - Critical database operations (INSERT, UPDATE, DELETE) are wrapped in transactions.

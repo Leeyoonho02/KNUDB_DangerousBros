@@ -11,11 +11,15 @@ This project builds a web application using the database schema designed in prev
 - Library: oracledb for database connectivity
 
 3. Installation & Execution
-(1) Install Dependencies
+(1) Create DB (DDL, DML)
+   - Use the provided DDL and DML scripts to create the database schema and populate it with initial data.
+
+(2) Install Dependencies
    npm install
 
-(2) Configuration
+(3) Configuration
    - Ensure the .env file is configured with the correct Oracle DB credentials.
+   - Put your Oracle DB credentials in the .env file.
 
 (3) Run Server
    node app.js
