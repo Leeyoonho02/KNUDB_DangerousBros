@@ -5932,3 +5932,12 @@ INSERT INTO rating (user_id, pedalboard_id, rating_value, rating_id) VALUES ('ei
 INSERT INTO rating (user_id, pedalboard_id, rating_value, rating_id) VALUES ('ei340', '369', '5', '360');
 INSERT INTO rating (user_id, pedalboard_id, rating_value, rating_id) VALUES ('coejieun341', '370', '2', '361');
 INSERT INTO rating (user_id, pedalboard_id, rating_value, rating_id) VALUES ('coejieun341', '371', '5', '362');
+
+-- insert처리를 위해 시퀀스 생성 쿼리 추가
+CREATE SEQUENCE rating_seq START WITH 1000;
+CREATE SEQUENCE parameter_value_seq START WITH 1000;
+CREATE SEQUENCE board_item_seq START WITH 1000;
+CREATE SEQUENCE effector_model_seq START WITH 1000;
+CREATE SEQUENCE pedalboard_seq START WITH 1000;
+
+commit;
