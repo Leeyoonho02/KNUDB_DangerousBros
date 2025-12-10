@@ -1,0 +1,58 @@
+📄 Phase 4 최종 프로젝트 요구사항 (PDF 전문 정리)
+
+1. 프로젝트 개요 및 목표
+
+제목: COMP322 Term Project - Phase 4 (Database Website Construction)
+
+배경: 이전 단계(Phase 3)에서는 JDBC(Java DataBase Connectivity)를 이용해 
+데이터베이스에 접근하고 조작하는 콘솔 기반의 간단한 Application을 구축했음.
+
+목표: 이번 마지막 단계는 이전 단계에서 구축한 Application의 주요한 비즈니스 로직을 활용하여 
+설계한 DB를 Back-end에서 활용하는 웹 사이트를 구축하고 서비스하는 것을 목표로 함.
+
+
+2. Requirements (요구사항) [70 pts]
+
+A. 웹 사이트 구현 [50 pts]
+Phase 3에서 구현한 JDBC Application의 필수 기능을 탑재한 웹 사이트를 구현해야 함.
+Phase 2에서 구성한 DB와 연동될 수 있어야 함.
+웹 사이트 디자인, 프로그래밍 언어 선택 및 구축 환경은 제한 없음.
+JSP 이외에 Django, Flask, Node.js 등 팀에서 자신 있는 웹 프레임워크 기술을 적용해도 됨.
+단, 이 경우 Phase 3의 JDBC 프로그램을 통해 구현한 DB 조작(삽입/삭제/변경/검색) 기능과 
+동등한(equivalent) 기능을 해당 프레임워크에 구현해야 함 (e.g., Python-Oracle 등).
+
+B. Git 활용 및 평가
+Github 등을 활용한 코드 관리 Repository 사용.
+사용 기록, 즉 커밋 로그를 토대로 Github 활용도를 평가함.
+Repository link와 Contributors Graph를 TeamX-task1.txt에 기술해야 함.
+
+C. 사용자 동시성 제어 (Concurrency Control) [20 pts]
+트랜잭션을 활용한 사용자 동시성 제어(concurrency control)를 지원해야 함.
+여러 명의 사용자가 동시에 접속할 수 있도록 해야 함.
+동시성 제어 실패 시, 데이터베이스 일관성, 무결성 오류가 생길 수 있음에 주의해야 함.
+어떻게 해결하였는지 TeamX-Additional_task1.txt에 기술해야 함.
+
+3. Submission (제출)
+
+제출 마감일: 2025년 12월 10일 (수) 23시 59분 59초.
+제출 방법: LMS 팀 프로젝트 메뉴에서 Phase 4 게시물에 "팀장"이 결과물 제출.
+
+제출물 목록:
+(1) TeamX-Phase4.zip
+Source Code를 모두 담은 압축 파일 (해제 후 포함된 파일들만으로 실행 가능해야 함).
+
+(2) TeamX-README.txt (or *.pdf)
+실행 및 사용 방법, 기능 설명, 유의 사항, Application 제작 환경 등 기술.
+데모 동영상 YouTube Link 포함.
+
+(3) TeamX-task1.txt
+
+(4) TeamX-Additional_task1.txt.
+
+기타 팀별 추가 파일들, if any.
+
+발표 평가: 팀별 발표 자료에 의한 발표 평가 진행 (대표 1인 발표).
+
+주의 사항:
+Late Submission(지각 제출) 시 50% 감점.
+Plagiarism(표절)은 절대 허용되지 않으며, 발견되는 즉시 남은 결과에 상관없이 "F" 학점 부여.
