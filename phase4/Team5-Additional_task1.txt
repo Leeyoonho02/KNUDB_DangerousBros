@@ -1,0 +1,13 @@
+[Concurrency Control Strategy]
+
+1. Connection Pooling
+   - We utilize the connection pooling feature provided by the oracledb driver.
+   - This allows multiple users to share a reuseable set of physical connections, managing resources efficiently and handling concurrent requests.
+
+2. Transaction Management
+   - Critical database operations (INSERT, UPDATE, DELETE) are wrapped in transactions.
+   - We ensure that commit is called only after all related operations succeed.
+   - If any operation fails, rollback is triggered to maintain data consistency and integrity.
+
+3. Session Management
+   - express-session is used to maintain user state across concurrent requests, ensuring that one user's actions do not interfere with another's session data.
