@@ -34,7 +34,7 @@ This project builds a web application using the database schema designed in prev
 - Statistics: View data insights and reports (Routes: /statistics).
 
 5. Demo Video
-- YouTube Link: 
+- YouTube Link: https://youtu.be/JMxgsImO7ps
 
 6. Notes
 - Please ensure the Oracle Database service is active before starting the Node.js server.
